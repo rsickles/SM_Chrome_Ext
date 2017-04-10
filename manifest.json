@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+
+  "name": "Getting started example",
+  "description": "This extension shows a Google Image search result for the current page",
+  "version": "2.0",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "Inject!"
+  },
+  "background": {
+    "pages": ["popup.html"],
+    "scripts": [
+      "jquery-3.2.0.min.js",
+      "inject_js.js"
+    ],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*.google.com/*", "http://*.facebook.com/*"],
+      "css": ["styles.css"],
+      "js": ["jquery-3.2.0.min.js","popup.js"],
+      "all_frames": true
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "https://www.facebook.com/*",
+    "tabs",
+    "https://ajax.googleapis.com/"
+  ],
+  "web_accessible_resources": ["w3.css"]
+}
