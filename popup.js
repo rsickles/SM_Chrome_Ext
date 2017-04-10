@@ -1,4 +1,4 @@
-console.log("Loaded");
+console.log("Activated");
 
 //Add css modal to page
 var style = document.createElement('link');
@@ -7,20 +7,19 @@ style.type = 'text/css';
 style.href = chrome.extension.getURL('w3.css');
 (document.head||document.documentElement).appendChild(style);
 var id = 0;
-
-
+var valid_links = ["cnn"];
+//change cursor when activated
+$("div").css('cursor','url(http://w17.snunit.k12.il/images/big_arrow.png),auto');
 //adding news box when any a is hovered over
 $( "a" ).hover(function() {
 		//id = id + 1;
-		var element =  document.getElementById('modal_0');
-		console.log($(this).origin == "cnn.it");
-		console.log($(this).origin);
 		//get the text out of this so we can say that it has to be a cnn link then we can grab url as shown below and use that to find related URLS
-		var d = this.origin;
-
-		console.log(decodeURIComponent($(this.origin)));
-		if ($(this).origin == "cnn.it"){
-			var url = $(this).href;
+		var element = $(this);
+		var article_link = element[0].href;
+		for (var index = 0; index < valid_links.length; index++) {
+		if (article_link.indexOf(valid_links[index]) != -1){
+			var url = $(this);
+			console.log(url);
 		createNewsBox({
 			"id" : id,
 	  	"news_1_img" : "http://global.fncstatic.com/static/v/all/img/og/og-fn-foxnews.jpg",
@@ -34,6 +33,7 @@ $( "a" ).hover(function() {
 			$('#modal_'+id).show();
 		});
 		}
+	}
   });
 
 function createNewsBox(data,callback) {
