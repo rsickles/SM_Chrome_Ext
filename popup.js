@@ -9,7 +9,13 @@ style.href = chrome.extension.getURL('w3.css');
 var id = 0;
 var valid_links = ["cnn"];
 //change cursor when activated
-$("div").css('cursor','url(http://w17.snunit.k12.il/images/big_arrow.png),auto');
+// var css =
+// ' body { cursor: url('+chrome.extension.getURL("cursor.ani")+'), default; }'
+// if ($("head").length === 0) {
+//   $("body").before(css);
+// } else {
+//   $("head").append(css);
+// }
 //adding news box when any a is hovered over
 $( "a" ).hover(function() {
 		//id = id + 1;
@@ -17,21 +23,50 @@ $( "a" ).hover(function() {
 		var element = $(this);
 		var article_link = element[0].href;
 		for (var index = 0; index < valid_links.length; index++) {
-		if (article_link.indexOf(valid_links[index]) != -1){
+		if(article_link.indexOf(valid_links[index]) != -1){
 			var url = $(this);
-			console.log(url);
-		createNewsBox({
-			"id" : id,
-	  	"news_1_img" : "http://global.fncstatic.com/static/v/all/img/og/og-fn-foxnews.jpg",
-	  	"news_2_img" : "http://global.fncstatic.com/static/v/all/img/og/og-fn-foxnews.jpg",
-	  	"news_3_img" : "http://global.fncstatic.com/static/v/all/img/og/og-fn-foxnews.jpg",
-	  	"news_1_heading" : "Hello World 1",
-	  	"news_2_heading" : "Hello World 2",
-	  	"news_3_heading" : "Hello World 3"
-	    },function(container) {
-			$("body").append(container);
-			$('#modal_'+id).show();
-		});
+			var article_title = $(url[0]).prev(0).text();
+
+			//http://cnn.it/2oZRWAW
+		//Make AJAX REQUEST
+		// only in white subheading can mouse be in
+		if(article_title!="" && article_title!=null && article_title.indexOf(' ') >= 0){
+		$.ajax({
+            type: "POST", //or GET
+            url: 'https://news-api.lateral.io/documents/similar-to-text',
+            data: '{"text":"The US just lost a trade battle with Mexico money.cnn.com"}',
+            contentType: 'application/json',
+            headers: {
+            	'subscription-key': '218622d4fbf2eb1c9c3321f2e87e5225'
+            },
+            crossDomain:true,
+            cache:false,
+            async:false,
+            success: function(msg){
+                //call createNewsBox function
+              article_1 = msg[0];
+              article_2 = msg[1];
+              article_3 = msg[3];
+              console.log(msg);
+					// 		createNewsBox({
+					// 		"id" : id,
+					// 		"news_1_img" : article_1.image,
+					// 		"news_2_img" : article_2.image,
+					// 		"news_3_img" : article_3.image,
+					// 		"news_1_heading" : article_1.title,
+					// 		"news_2_heading" : article_1.title,
+					// 		"news_3_heading" : article_1.title
+					// 		},function(container) {
+					// 			$("body").append(container);
+					// 			$('#modal_'+id).show();
+					// 		});
+           },
+           error:function(jxhr){
+               alert(jxhr.responseText);
+                //do some thing
+           }
+     });
+		}
 		}
 	}
   });
@@ -52,10 +87,17 @@ function createNewsBox(data,callback) {
 	news_3_container.appendTo(container_modal_content);
 	console.log("RYAN");
 	//append three titles to each news box container
-	$(".news-1-container").text(data.news_1_heading);
-	$(".news-2-container").text(data.news_2_heading);
-	$(".news-3-container").text(data.news_3_heading);
 	console.log("RYAN");
+	// add headings to each box
+	var news_1_heading = $('<div class="news-1-heading">');
+	var news_2_heading = $('<div class="news-2-heading">');
+	var news_3_heading = $('<div class="news-3-heading">');
+	news_1_heading.appendTo(news_1_container);
+	news_2_heading.appendTo(news_2_container);
+	news_3_heading.appendTo(news_3_container);
+	news_1_heading.text("Heading 1")
+	news_2_heading.text("Heading 2")
+	news_3_heading.text("Heading 3")
 	//create three img and append to boxes
 	var img_news_1 = $('<img id="img_news_1">');
 	img_news_1.attr('src', data.news_1_img);

@@ -24,11 +24,16 @@
       "all_frames": true
     }
   ],
+  "web_accessible_resources": [
+    "cursor.cur"
+  ],
   "permissions": [
     "activeTab",
     "https://www.facebook.com/*",
     "tabs",
-    "https://ajax.googleapis.com/"
+    "https://ajax.googleapis.com/",
+    "https://api-v4.lateral.io/*",
+    "https://news-api.lateral.io/documents/similar-to-text"
   ],
   "web_accessible_resources": ["w3.css"]
 }
