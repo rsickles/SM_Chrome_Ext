@@ -15,7 +15,6 @@ var media_vals = {"the-guardian":-1, "the-new-yorker":-2, "vice": -1, "the-guard
 // ("breibart",3),("the_guardian",-1),("slate",-2),("vox",-2),("atlantic",-2),("msnbc",-2),("huffington_post",-2),("occupy_democrats",3)];
 var valid_links = ["cnn","fxn","trib","occupydemocrats"];
 //adding news box when any a is hovered over
-//var created_box_already = false;
 
 $( 'a' ).on({
     mouseenter:function() {
@@ -72,21 +71,6 @@ $( 'a' ).on({
 									$("body").append(container);
 									$('#modal_'+id).show();
 								});
-						//}
-						//else{
-							// populateNewsBox({
-							// 	"id" : id,
-							// 	"news_1_img" : article_1.image,
-							// 	"news_2_img" : article_2.image,
-							// 	"news_3_img" : article_3.image,
-							// 	"news_1_heading" : article_1['title'],
-							// 	"news_2_heading" : article_2['title'],
-							// 	"news_3_heading" : article_3['title'],
-							// 	"news_1_url" : article_1['url'],
-							// 	"news_2_url" : article_2['url'],
-							// 	"news_3_url" : article_3['url']
-							// 	});
-						//}
            },
            error:function(jxhr){
                console.log(jxhr.responseText);
@@ -99,28 +83,6 @@ $( 'a' ).on({
 		}
   });
 
-// function populateNewsBox(data){
-// 	console.log("Ryan");
-// 	$(".news-1-heading").text(data.news_1_heading);
-// 	$(".news-2-heading").text(data.news_2_heading);
-// 	$(".news-3-heading").text(data.news_3_heading);
-// 	$("#img_news_1").attr('src', data.news_1_img);
-// 	$("#img_news_2").attr('src', data.news_2_img);
-// 	$("#img_news_3").attr('src', data.news_3_img);
-// 	$( "#img_news_1" ).remove( "a" );
-// 	$( "#img_news_2" ).remove( "a" );
-// 	$( "#img_news_3" ).remove( "a" );
-// 	$("#img_news_1").wrap($('<a>',{
-//    href: data.news_1_url
-// 	 }));
-// 	$("#img_news_2").wrap($('<a>',{
-//    href: data.news_2_url
-// 	 }));
-// 	$("#img_news_3").wrap($('<a>',{
-//    href: data.news_3_url
-// 	 }));
-// 	$('#modal_'+id).show();
-// }
 
 function set_meter(source){
 		chrome.storage.sync.get("score", function(data) {
@@ -134,17 +96,8 @@ function set_meter(source){
 
 		});
 
-	// console.log(currentScore);
-
-	// console.log(score);
-	// console.log("THE NEW SCORE IS!!!!");
-	// console.log(new_val);
-
 }
 
-// function getScore(){
-// 	chrome.storage.sync.get("score", function(data) {return data["score"];});
-// }
 
 function createNewsBox(data,callback) {
 	//container for three images and main container
@@ -156,6 +109,17 @@ function createNewsBox(data,callback) {
 	var close = $('<span class="close">');
 	close.text("CLOSE");
 	close.appendTo(container_modal_content);
+	//add meter element
+	var meter = $('<meter class="meter">');
+	var div = $('<div>');
+	meter.attr('min', -50);
+	meter.attr('max', 50);
+	chrome.storage.sync.get("score", function(data) {
+		meter.attr('value', data['score']);
+		meter.appendTo(div);
+
+	});
+	div.appendTo(container_modal_content);
 	var news_1_container = $('<div class="news-1-container">');
 	var news_2_container = $('<div class="news-2-container">');
 	var news_3_container = $('<div class="news-3-container">');
@@ -219,42 +183,7 @@ function createNewsBox(data,callback) {
 	img_news_3.click(function(){
 		set_meter(data.source_slug_3);
 	});
-	//add links to meter(data.source_slug)
-	// $("#img_news_1").wrap($('<a id="news_1_url">',{
- //    href: data.news_1_url
-	//  }));
-	// $("#img_news_2").wrap($('<a id="news_2_url">',{
- //   href: data.news_2_url
-	//  }));
-	// $("#img_news_3").wrap($('<a id="news_3_url">',{
- //   href: data.news_3_url
-	//  }));
 
-	//add meter element
-	var meter = $('<meter class="meter">');
-	var div = $('<div>');
-	meter.attr('min', -50);
-	meter.attr('max', 50);
-	chrome.storage.sync.get("score", function(data) {
-		meter.attr('value', data['score']);
-		div.text("Liberal-Conservative");
-		meter.appendTo(div);
-		div.appendTo(container_modal_content);
-	});
-
-
-	//track which link they click on
-	// $( "#img_news_1" ).click(function() {
-	//   //get val from array and add to score stored in browswer
-	//   console.log("1");
-	// });
-	// $( "#img_news_2" ).click(function() {
-	//   //get val from array and add to score stored in browswer
-	// });
-	// $( "#img_news_3" ).click(function() {
-	//   //get val from array and add to score stored in browswer
-	// });
-	// created_box_already = true;
 	$( close ).on( "click", function() {
       $("#modal_0").hide();
 	});
