@@ -33,7 +33,8 @@
     "tabs",
     "https://ajax.googleapis.com/",
     "https://api-v4.lateral.io/*",
-    "https://news-api.lateral.io/documents/similar-to-text"
+    "https://news-api.lateral.io/documents/similar-to-text",
+    "storage"
   ],
   "web_accessible_resources": ["w3.css"]
 }
