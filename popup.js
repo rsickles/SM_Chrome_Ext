@@ -221,11 +221,14 @@ function createNewsBox(data,callback) {
 
 	//add meter element
 	var meter = $('<meter class="meter">');
+	var div = $('<div>');
 	meter.attr('min', -50);
 	meter.attr('max', 50);
 	chrome.storage.sync.get("score", function(data) {
 		meter.attr('value', data['score']);
-		meter.appendTo(container_modal_content);
+		div.text("Liberal-Conservative");
+		meter.appendTo(div);
+		div.appendTo(container_modal_content);
 	});
 
 
