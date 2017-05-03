@@ -1,5 +1,4 @@
 console.log("Activated");
-
 //Add css modal to page
 var style = document.createElement('link');
 style.rel = 'stylesheet';
@@ -9,7 +8,7 @@ style.href = chrome.extension.getURL('w3.css');
 var id = 0;
 //1 is more conservative, -1 is more liberal
 //http://www.truthrevolt.org/sites/default/files/images/kP4Yax1.jpg
-var media_vals = {"the-guardian":-1, "the-new-yorker":-2, "vice": -1, "the-guardian":0, "time":0, "bbc":0, "new-york-times":1, "forbes":2,
+var media_vals = {"the-guardian":-1, "the-new-yorker":-2, "vice": -1, "the-guardian":0, "time":0, "bbc":0, "new-york-times":-1, "forbes":2,
 "sports-illustrated":0, "cbs-sports":0};
 // [("wall_street",0),("npr",0),("bbc",0),("new_york_times",-1),("cnn",-1),("usa_today",0),("economist",1),("fxn",2),("info_wars",3),
 // ("breibart",3),("the_guardian",-1),("slate",-2),("vox",-2),("atlantic",-2),("msnbc",-2),("huffington_post",-2),("occupy_democrats",3)];
@@ -88,6 +87,7 @@ function set_meter(source){
 		chrome.storage.sync.get("score", function(data) {
 		var score = media_vals[source];
 		var new_val = data["score"] + score;
+		console.log("METER SCORE");
 		console.log(new_val);
 		chrome.storage.sync.set({'score': new_val}, function() {
           // Notify that we saved.

@@ -8,7 +8,13 @@
 @media (min-width:993px){.w3-modal-content{width:900px}.w3-hide-large{display:none!important}.w3-sidenav.w3-collapse,.w3-sidebar.w3-collapse{display:block!important}}
 */
 /* The Modal (background) */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+#facebook ._-kb div {
+    font-family: "Open Sans";
+}
+
 .modal {
+    font-family: "Open Sans";
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -18,17 +24,39 @@
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,200,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+}
+
+.meter {
+  width: 290px;
+  height: 25px;
+  float: left;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  margin-top: 5px;
+}
+
+meter::-webkit-meter-bar {
+  background: none; /* Required to get rid of the default background property */
+  background-color: rgb(200,0,0);
+  border-radius: 30px;
+}
+
+meter::-webkit-meter-optimum-value {
+  background: #00BFFF; /**blue part**/
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
 }
 
 /* Modal Content/Box */
 .modal-content {
     box-sizing: border-box;
-    background-color: #ccc;
+    background-color: rgb(233,235,238);
+    font-family: "Open Sans";
     margin: 15% auto; /* 15% from the top and centered */
     padding: 25px;
-    border: 2px solid #000;
-    height: 320px;
+    border: 2px solid rgb(233,235,238);
+    height: 360px;
     width: 700px; /* Could be more or less, depending on screen size */
 }
 /**************************************************/
@@ -36,19 +64,36 @@
 /**************************************************/
 .modal-content .news-1-container {
     /** The container colored PINK is the main container **/
-    background: #fcc;
+    background: #fff;
     width: 200px;
-    height: auto;
+    height: 255px;
     float: left;
     margin-right: 23px;
     /*background:#eee;*/
-    color: #;
-    font-size: 15px;
+    font-size: 13px;
+    -webkit-box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+    -moz-box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+    box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+    padding: 0;
 }
+
+.news-1-heading {
+    margin: 5px;
+    height: 50px;
+    text-overflow: ellipsis;
+    font-family: "Open Sans";
+    box-sizing: border-box;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; 
+}
+
 .modal-content #img_news_1 {
     width: 190px;
     height: 190px;
     margin: 5px 5px;
+    margin-top: 0px;
     clear: both;
 }
 /**************************************************/
@@ -56,48 +101,85 @@
 /**************************************************/
 
 .modal-content .news-2-container {
+    font-size: 13px;
     width: 200px;
-    height: auto;
+    height: 255px;
     float: left;
     margin-right: 23px;
-    background: #eee;
+    background: #fff;
+    -webkit-box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+    -moz-box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+    box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+}
+
+.news-2-heading {
+    margin: 5px;
+    height: 50px;
+    text-overflow: ellipsis;
+    font-family: "Open Sans";
+    box-sizing: border-box;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+
 }
 
 .modal-content #img_news_2 {
     width: 190px;
     height: 190px;
     margin: 5px 5px;
+    margin-top: 0px;
     clear: both;
 }
 
 .modal-content .news-3-container {
+    font-size: 13px;
     width: 200px;
-    height: auto;
+    height: 255px;
     float: left;
-    background: #eee;
+    background: #fff;
     margin-right: 0px;
+    -webkit-box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+    -moz-box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+    box-shadow: 20px 18px 30px -15px rgba(0,0,0,0.75);
+}
+
+.news-3-heading {
+    margin: 5px;
+    height: 50px;
+    text-overflow: ellipsis;
+    font-family: "Open Sans";
+    box-sizing: border-box;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; 
 }
 
 .modal-content #img_news_3 {
     width: 190px;
     height: 190px;
     margin: 5px 5px;
+    margin-top: 0px;
     clear: both;
 }
 
 /* The Close Button */
 .close {
-    background: #ccc;
+    background: rgb(233,235,238);
     color: #aaa;
     float: right;
     font-size: 25px;
     font-weight: bold;
-    width: 100%;
+    width: 50%;
     height: 25px;
     margin-bottom: 20px;
     text-align: right;
     vertical-align: center;
     padding-bottom: 5px;
+    clear: none;
+    font-family: "Helvetica", Sans-serif;
 }
 
 .close:hover,
@@ -111,8 +193,10 @@ body {
 }
 
 .clear {
-    width: 100%;
+    width: 325px;
     height: 5px;
     clear: both;
 }
+
+
 
