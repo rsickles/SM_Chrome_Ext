@@ -1,90 +1,128 @@
 console.log('Activated')
+console.log('Event::Changed')
 // Add css modal to page
 var style = document.createElement('link')
+var SUBSCRIPTION_KEY = '218622d4fbf2eb1c9c3321f2e87e5225'
+var WEIGHT = {
+  far_liberal: -2,
+  liberal: -1,
+  neutral: 0,
+  conservative: 1,
+  far_conservative: 2,
+}
+
+// 1 is more conservative, -1 is more liberal
+// http://www.truthrevolt.org/sites/default/files/images/kP4Yax1.jpg
+// [("wall_street",0),("npr",0),("bbc",0),("new_york_times",-1),("cnn",-1),("usa_today",0),("economist",1),("fxn",2),("info_wars",3),
+// ("breibart",3),("the_guardian",-1),("slate",-2),("vox",-2),("atlantic",-2),("msnbc",-2),("huffington_post",-2),("occupy_democrats",3)]
+//
+var MEDIA_VALUES = {
+  'the-guardian': WEIGHT.liberal,
+  'the-new-yorker': WEIGHT.far_liberal,
+  'vice': WEIGHT.liberal,
+  'the-guardian': WEIGHT.neutral,
+  'time': WEIGHT.neutral,
+  'bbc': WEIGHT.neutral,
+  'new-york-times': WEIGHT.neutral,
+  'forbes': WEIGHT.far_conservative,
+  'sports-illustrated': WEIGHT.neutral,
+  'cbs-sports': WEIGHT.neutral,
+  'facebook': WEIGHT.liberal
+}
+
 style.rel = 'stylesheet'
 style.type = 'text/css'
 style.href = chrome.extension.getURL('w3.css')
+
 ;(document.head || document.documentElement).appendChild(style)
+
 var id = 0
-// 1 is more conservative, -1 is more liberal
-// http://www.truthrevolt.org/sites/default/files/images/kP4Yax1.jpg
-var media_vals = {'the-guardian': -1, 'the-new-yorker': -2, 'vice': -1, 'the-guardian': 0, 'time': 0, 'bbc': 0, 'new-york-times': -1, 'forbes': 2,
-'sports-illustrated': 0, 'cbs-sports': 0}
-// [("wall_street",0),("npr",0),("bbc",0),("new_york_times",-1),("cnn",-1),("usa_today",0),("economist",1),("fxn",2),("info_wars",3),
-// ("breibart",3),("the_guardian",-1),("slate",-2),("vox",-2),("atlantic",-2),("msnbc",-2),("huffington_post",-2),("occupy_democrats",3)]
 var valid_links = ['cnn', 'fxn', 'trib', 'occupydemocrats']
 // adding news box when any a is hovered over
 
 $('a').on({
-  mouseenter: function () {
+  mouseenter: function (event) {
     event.preventDefault()
     // id = id + 1
     // get the text out of this so we can say that it has to be a cnn link then we can grab url as shown below and use that to find related URLS
 
-    var element = $(this)
-    var article_link = element[0].href
-    for (var index = 0; index < valid_links.length; index++) {
+    var self = $(this)
+    var article_link = self[0].href
+
+    valid_links.forEach(function (element, index) {
       if (article_link.indexOf(valid_links[index]) != -1) {
-        var url = $(this)
-        var article_title = $(url[0]).prev(0).text()
-        var data = '{"text":"' + article_title.substring(0, article_title.length - 12) + '"}'
+        var url = self
+        var article_title = $(url[0]).prev(0).text().trim()
+        var article_text = article_title.substring(0, article_title.length - 12)
+        var payload = {
+          text: article_text
+        }
         // http://cnn.it/2oZRWAW
         // Make AJAX REQUEST
         // only in white subheading can mouse be in
-        console.log(article_title)
+        console.log('article_title', article_title)
+
         if ((article_title != '') && (article_title != null) && (article_title.indexOf(' ') >= 0)) {
-          console.log('HOVERING')
+          console.log('Event::hover')
           $.ajax({
             type: 'POST', // or GET
             url: 'https://news-api.lateral.io/documents/similar-to-text',
-            data: data,
-            contentType: 'application/json',
+            data: payload,
+            dataType: 'json',
             headers: {
-              'subscription-key': '218622d4fbf2eb1c9c3321f2e87e5225'
+              'subscription-key': SUBSCRIPTION_KEY
             },
             crossDomain: true,
             cache: false,
             async: false,
-            success: function (msg) {
-              // call createNewsBox function
-              article_1 = msg[0]
-              article_2 = msg[1]
-              article_3 = msg[3]
-              console.log(msg)
-              // if(!created_box_already){
-              createNewsBox({
-                'id': id,
-                'news_1_img': article_1.image,
-                'news_2_img': article_2.image,
-                'news_3_img': article_3.image,
-                'source_slug_1': article_1.source_slug,
-                'source_slug_2': article_2.source_slug,
-                'source_slug_3': article_3.source_slug,
-                'news_1_heading': article_1['title'],
-                'news_2_heading': article_2['title'],
-                'news_3_heading': article_3['title'],
-                'news_1_url': article_1['url'],
-                'news_2_url': article_2['url'],
-                'news_3_url': article_3['url']
-              }, function (container) {
-                $('body').append(container)
-                $('#modal_' + id).show()
-              })
-            },
-            error: function (jxhr) {
-              console.log(jxhr.responseText)
-            // do some thing
-            }
+            success: onSuccess,
+            error: onError
           })
         }
       }
-    }
+    })
   }
 })
 
+function onError (response) {
+  console.error(response.responseText)
+}
+
+function onSuccess (response) {
+  // call createNewsBox function
+  article_1 = response[0]
+  article_2 = response[1]
+  article_3 = response[3]
+
+  console.log('response', response)
+  // if(!created_box_already){
+  createNewsBox({
+    'id': id,
+    'news_1_img': article_1.image,
+    'news_2_img': article_2.image,
+    'news_3_img': article_3.image,
+    'source_slug_1': article_1.source_slug,
+    'source_slug_2': article_2.source_slug,
+    'source_slug_3': article_3.source_slug,
+    'news_1_heading': article_1['title'],
+    'news_2_heading': article_2['title'],
+    'news_3_heading': article_3['title'],
+    'news_1_url': article_1['url'],
+    'news_2_url': article_2['url'],
+    'news_3_url': article_3['url']
+  }, function (err, container) {
+    if (err) {
+      console.error('Error', 'Error loading news box')
+    // handle...
+    }
+    $('body').append(container)
+    $('#modal_' + id).show()
+  })
+}
+
 function set_meter (source) {
   chrome.storage.sync.get('score', function (data) {
-    var score = media_vals[source]
+    var score = MEDIA_VALUES[source]
     var new_val = data['score'] + score
     console.log('METER SCORE')
     console.log(new_val)
@@ -104,7 +142,7 @@ function createNewsBox (data, callback) {
   var close = $('<span class="close">')
   close.text('CLOSE')
   close.appendTo(container_modal_content)
-  // add meter element
+  // add meter self
   var meter = $('<meter class="meter">')
   var div = $('<div>')
   meter.attr('min', -50)
@@ -177,11 +215,10 @@ function createNewsBox (data, callback) {
     set_meter(data.source_slug_3)
   })
 
-  $(close).on('click', function () {
+  $(close).on('click', function (event) {
+    event.preventDefault()
     $('#modal_0').hide()
   })
 
-  callback(container)
+  callback(null, container)
 }
-
-// })
